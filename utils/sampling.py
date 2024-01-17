@@ -53,7 +53,11 @@ def mnist_noniid(dataset, num_users, args):
 
     # divide and assign
     for i in range(num_users):
-        rand_set = set(np.random.choice(idx_shard, 2, replace=False))
+        if i == 0:
+            allocated_num = 12
+        else:
+            allocated_num = 2
+        rand_set = set(np.random.choice(idx_shard, allocated_num, replace=False))
         idx_shard = list(set(idx_shard) - rand_set)
         for rand in rand_set:
             dict_users[i] = np.concatenate((dict_users[i], idxs[rand*num_imgs:(rand+1)*num_imgs]), axis=0)

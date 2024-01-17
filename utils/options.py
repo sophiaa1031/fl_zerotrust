@@ -41,7 +41,7 @@ def args_parser():
     # comparison arguments
     parser.add_argument('--attack', action='store_true', help='whether attack or not')
     parser.add_argument('--attack_epoch', type=int, default=10, help="number of epochs for attack")
-    parser.add_argument('--defense', type=str, default='none', help="none or ratio or remove")
+    parser.add_argument('--defense', type=str, default='none', help="none or zerotrust or remove")
 
     args = parser.parse_args()
     return args
