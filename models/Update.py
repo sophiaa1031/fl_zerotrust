@@ -30,7 +30,7 @@ class LocalUpdate(object):
         self.selected_clients = []
         self.ldr_train = DataLoader(DatasetSplit(dataset, idxs), batch_size=self.args.local_bs, shuffle=True)
 
-    def train(self, net):
+    def train(self, idx, epoch, net):
         net.train()
         # train and update
         optimizer = torch.optim.SGD(net.parameters(), lr=self.args.lr, momentum=self.args.momentum)
@@ -43,6 +43,9 @@ class LocalUpdate(object):
                 net.zero_grad()
                 log_probs = net(images)
                 loss = self.loss_func(log_probs, labels)
+                if torch.isnan(loss).any():
+                    print('nan')
+
                 loss.backward()
                 optimizer.step()
                 if self.args.verbose and batch_idx % 10 == 0:
@@ -51,5 +54,16 @@ class LocalUpdate(object):
                                100. * batch_idx / len(self.ldr_train), loss.item()))
                 batch_loss.append(loss.item())
             epoch_loss.append(sum(batch_loss)/len(batch_loss))
+
+        if  self.args.attack and epoch >= self.args.attack_epoch and self.args.defense != 'remove' and idx == 0:  # 如果是恶意客户端，添加参数噪音，改变参数epoch在不同时刻加入
+            print('add noise...')
+            parameters_list = [param.view(-1) for param in net.parameters()]
+            parameters_concat = torch.cat(parameters_list)
+            parameters_np = parameters_concat.data.numpy()
+            mean = np.mean(parameters_np)
+            for param in net.parameters():
+                noise = torch.normal(1e-3, 1e-1, size=param.data.shape).to(self.args.device)
+                param.data += noise
+
         return net.state_dict(), sum(epoch_loss) / len(epoch_loss)
 

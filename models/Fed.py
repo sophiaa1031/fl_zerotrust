@@ -7,10 +7,12 @@ import torch
 from torch import nn
 
 
-def FedAvg(w):
+def FedAvg(w,dict_data_ratio_list):
     w_avg = copy.deepcopy(w[0])
     for k in w_avg.keys():
-        for i in range(1, len(w)):
-            w_avg[k] += w[i][k]
-        w_avg[k] = torch.div(w_avg[k], len(w))
+        for i in range(len(w)):
+            if i == 0:
+                w_avg[k] *= dict_data_ratio_list[0]
+            else:
+                w_avg[k] += w[i][k] * dict_data_ratio_list[i]
     return w_avg
