@@ -1,6 +1,8 @@
 # 文本图片
 .txt
 .png
+save/*
+plot_data/*
 
 # pycharm
 .idea/*
