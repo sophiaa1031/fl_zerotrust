@@ -56,7 +56,7 @@ class LocalUpdate(object):
             epoch_loss.append(sum(batch_loss)/len(batch_loss))
 
         if  (self.args.attack and
-                epoch+1 >= self.args.attack_epoch and
+                epoch >= self.args.attack_epoch and
                 self.args.defense != 'remove' and
                 idx == 0):  # 如果是恶意客户端，添加参数噪音，改变参数epoch在不同时刻加入
             print('add noise...')
@@ -72,7 +72,7 @@ class LocalUpdate(object):
                 total_params += param.data.numel()
             mean /= total_params
             for param in net.parameters():
-                noise = torch.normal(1e-3, 1e-1, size=param.data.shape).to(self.args.device)
+                noise = torch.normal(0, self.args.std, size=param.data.shape).to(self.args.device)
                 param.data += noise
 
         return net.state_dict(), sum(epoch_loss) / len(epoch_loss)

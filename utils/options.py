@@ -7,11 +7,11 @@ import argparse
 def args_parser():
     parser = argparse.ArgumentParser()
     # federated arguments
-    parser.add_argument('--epochs', type=int, default=50, help="rounds of training")
+    parser.add_argument('--epochs', type=int, default=100, help="rounds of training")
     parser.add_argument('--num_users', type=int, default=10, help="number of users: K")
     parser.add_argument('--frac', type=float, default=1, help="the fraction of clients: C")
-    parser.add_argument('--local_ep', type=int, default=1, help="the number of local epochs: E")
-    parser.add_argument('--local_bs', type=int, default=10, help="local batch size: B")
+    parser.add_argument('--local_ep', type=int, default=2, help="the number of local epochs: E")
+    parser.add_argument('--local_bs', type=int, default=64, help="local batch size: B")
     parser.add_argument('--bs', type=int, default=128, help="test batch size")
     parser.add_argument('--lr', type=float, default=0.01, help="learning rate")
     parser.add_argument('--momentum', type=float, default=0.5, help="SGD momentum (default: 0.5)")
@@ -42,6 +42,7 @@ def args_parser():
     parser.add_argument('--attack', action='store_true', help='whether attack or not')
     parser.add_argument('--attack_epoch', type=int, default=10, help="number of epochs for attack")
     parser.add_argument('--defense', type=str, default='none', help="none or zerotrust or remove")
+    parser.add_argument('--std', type=int, default=1e-1, help="standard deviation")
 
     args = parser.parse_args()
     return args

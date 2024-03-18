@@ -54,7 +54,7 @@ def mnist_noniid(dataset, num_users, args):
     # divide and assign
     for i in range(num_users):
         if i == 0:
-            allocated_num = 12
+            allocated_num = 6 #12
         else:
             allocated_num = 2
         rand_set = set(np.random.choice(idx_shard, allocated_num, replace=False))
